@@ -190,22 +190,16 @@ void handle_http_request(int fd) {
 }
 
 int main(int argc, char **argv) {
-    FILE *html_data;
-    html_data = fopen("index.html", "r");
+    if (argc < 2) {
+        printf("usage: ./server PORT\n");
+        exit(1);
+    }
+    printf("iselein.me server starting on port %s...\n", *(argv + 1));
 
-    char response_data[10240];
-    fgets(response_data, 10240, html_data);
-
-    fclose(html_data);
-
-    char http_header[10240] = "HTTP/1.1 200 OK\r\n"
-                            "Server: c-htmx\r\n"
-                            "Content-type: text/html\r\n\n";
-    strcat(http_header, response_data);
-    printf("iselein server started\n");
-
-    SocketInfo *socketInfo = get_listen_socket("6969");
+    SocketInfo *socketInfo = get_listen_socket(*(argv + 1));
     int sockfd = socketInfo->sockfd;
+
+    printf("waiting for requests...\n");
 
     int new_sockfd;
     while (1) {
