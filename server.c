@@ -169,18 +169,18 @@ void handle_http_request(int fd) {
 
     if ((strcmp(*req_vals, "GET")) == 0) {
         if ((strcmp(*(req_vals + 1), "/")) == 0) {
-            serve_html("index.html", fd, "HTTP/1.1 200 OK", "Content-type: text/html");
+            serve_html("index.html", fd, "HTTP/2 200 OK", "Content-type: text/html");
         } else if ((strcmp(*(req_vals + 1), "/favicon.ico")) == 0) {
             printf("serving file\n");
-            serve_file("favicon.ico", fd, "HTTP/1.1 200 OK", "Content-type: image/x-icon");
+            serve_file("favicon.ico", fd, "HTTP/2 200 OK", "Content-type: image/x-icon");
         } else if ((strcmp(*(req_vals + 1), "/iselein.png")) == 0) {
             printf("serving file\n");
-            serve_file("iselein.png", fd, "HTTP/1.1 200 OK", "Content-type: image/png");
+            serve_file("iselein.png", fd, "HTTP/2 200 OK", "Content-type: image/png");
         } else {
-            serve_html("404.html", fd, "HTTP/1.1 404 NOT FOUND", "Content-type: text/html");
+            serve_html("404.html", fd, "HTTP/2 404 NOT FOUND", "Content-type: text/html");
         }
     } else {
-        serve_html("404.html", fd, "HTTP/1.1 404 NOT FOUND", "Content-type: text/html");
+        serve_html("404.html", fd, "HTTP/2 404 NOT FOUND", "Content-type: text/html");
     }
 
     free(*req_vals);
