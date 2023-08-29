@@ -95,6 +95,9 @@ char **parse_request(char *req) {
     return rv;
 }
 
+/*
+ * DEPRECATED: serve_file seems to do the trick
+ */
 int serve_html(char *filename, int fd, char *header, char *content_type) {
     FILE *html_fp;
     html_fp = fopen(filename, "r");
@@ -161,26 +164,28 @@ void handle_http_request(int fd) {
     if (read_val < 0) {
         perror("recv");
     }
-    printf("%s", buf);
+    // printf("%s", buf);
     char **req_vals = parse_request(buf);
-    printf("rv: %s\n", *req_vals);
-    printf("rv: %s\n", *(req_vals + 1));
-    printf("rv: %s\n", *(req_vals + 2));
+    // printf("rv: %s\n", *req_vals);
+    // printf("rv: %s\n", *(req_vals + 1));
+    // printf("rv: %s\n", *(req_vals + 2));
 
     if ((strcmp(*req_vals, "GET")) == 0) {
-        if ((strcmp(*(req_vals + 1), "/")) == 0) {
-            serve_html("index.html", fd, "HTTP/1.1 200 OK", "Content-type: text/html");
+        if ((strcmp(*(req_vals + 1), "/")) == 0 || (strcmp(*(req_vals + 1), "/index.html") == 0)) {
+            serve_file("index.html", fd, "HTTP/1.1 200 OK", "Content-type: text/html");
+        } else if ((strcmp(*(req_vals + 1), "/styles.css")) == 0) {
+            serve_file("styles.css", fd, "HTTP/1.1 200 OK", "Content-type: text/css");
         } else if ((strcmp(*(req_vals + 1), "/favicon.ico")) == 0) {
-            printf("serving file\n");
             serve_file("favicon.ico", fd, "HTTP/1.1 200 OK", "Content-type: image/x-icon");
         } else if ((strcmp(*(req_vals + 1), "/iselein.png")) == 0) {
-            printf("serving file\n");
             serve_file("iselein.png", fd, "HTTP/1.1 200 OK", "Content-type: image/png");
+        } else if ((strcmp(*(req_vals + 1), "/profile.png")) == 0) {
+            serve_file("profile.png", fd, "HTTP/1.1 200 OK", "Content-type: image/png");
         } else {
-            serve_html("404.html", fd, "HTTP/1.1 404 NOT FOUND", "Content-type: text/html");
+            serve_file("404.html", fd, "HTTP/1.1 404 NOT FOUND", "Content-type: text/html");
         }
     } else {
-        serve_html("404.html", fd, "HTTP/1.1 404 NOT FOUND", "Content-type: text/html");
+        serve_file("404.html", fd, "HTTP/1.1 404 NOT FOUND", "Content-type: text/html");
     }
 
     free(*req_vals);
@@ -207,9 +212,9 @@ int main(int argc, char **argv) {
             perror("accept");
             exit(errno);
         }
-        printf("connected to client\n");
+        // printf("connected to client\n");
         handle_http_request(new_sockfd);
-        printf("handled request\n");
+        // printf("handled request\n");
         close(new_sockfd);
     }
 }
