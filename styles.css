@@ -63,11 +63,12 @@ img {
 }
 
 .hero-main {
-    font-size: 1.7em;
+    font-size: 2em;
     margin-bottom: 3px;
 }
 
 .hero-caption {
+    font-size: 1.3em;
     font-weight: 500;
 }
 
@@ -85,9 +86,9 @@ img {
 }
 
 .icon {
-    padding-right: 5px;
-    padding-left: 5px;
-    height: 20px;
+    padding-right: 10px;
+    padding-left: 10px;
+    height: 25px;
     fill: #ff66c4;
 }
 
@@ -118,7 +119,7 @@ img {
         font-size: 2.2em;
     }
     .hero-caption {
-        font-size: 1.3em;
+        font-size: 1.4em;
         padding-top: 5px;
         padding-bottom: 5px;
     }
