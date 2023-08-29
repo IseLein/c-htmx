@@ -9,16 +9,35 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Victor+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
 
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
 
     <body>
-        <div class="header">
-            <a class="logo-header" href="/">
-                <img class="logo" src="iselein.png" alt="ishuz">
-                <h2 class="header-text">iselein.me</h2>
-            </a>
+        <div style="position: sticky; z-index: 50; top: 5px;">
+            <div class="header">
+                <a class="logo-header" href="/">
+                    <img class="logo" src="iselein.png" alt="ishuz">
+                    <h2 class="header-text">iselein.me</h2>
+                </a>
+                <div class="desktop">
+                    <a class="header-text" href="#about">about me</a>
+                    <a class="header-text" href="#about">projects</a>
+                    <btn id="mobile-btn">
+                        <svg class="mobile-btn" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                            <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+                            <path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/>
+                        </svg>
+                    </btn>
+                </div>
+            </div>
+            <div id="mobile" style="display: none;">
+                <div class="mobile-nav">
+                    <a href="#about">about me</a>
+                    <a href="#about">projects</a>
+                </div>
+            </div>
         </div>
         <div class="hero">
             <div class="hero-text">
@@ -55,15 +74,46 @@
             </div>
             <img class="hero-img" style="border-radius: 999px;" src="profile.png" alt="ishuz">
         </div>
+        <div style="margin-top: 30px;"></div>
+        <div id="about" class="">
+            <h2 class="topic">About Me</h2>
+            <h4 class="topic-cmd">$ whoami</h4>
+        </div>
+        <div class="topic-body">
+            <div>
+                I am a third year computer science student at the University of Toronto, pursuing a Bachelors in Information Security.
+                I am currently a technical associate at the MCSS and a CSC207 TA for the fall term.
+            </div>
+            <div style="margin-top: 10px;">
+                <span style="font-weight: bold;">I am actively seeking a software developer internship (to start May 2024).</span> You can check out my
+                <a style="font-weight: bold; "href="resume.pdf" target="_blank" rel="noopener noreferrer">resume<a>.
+            </div>
+            <div style="margin-top: 10px;">
+                I play basketball in my free time and I am a big football fan.
+            </div>
+        </div>
     </body>
     <script src="https://unpkg.com/typed.js@2.0.16/dist/typed.umd.js"></script>
     <script>
+        const btn = document.getElementById("mobile-btn");
+        const div = document.getElementById("mobile");
+        console.log("hola");
+        btn.addEventListener("click", function() {
+            const isVisible = div.style.display !== "none";
+            console.log("hola");
+            if (isVisible) {
+                div.style.display = "none";
+            } else {
+                div.style.display = "block";
+            }
+        });
+
         var typed = new Typed('#typed', {
             strings: [
                 'a software developer',
                 'a mathematics lover',
                 'a basketball and football fan',
-                'a Jesus Kid',
+                'a Jesus kid',
             ],
             startDelay: 300,
             typeSpeed: 80,

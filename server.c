@@ -181,6 +181,8 @@ void handle_http_request(int fd) {
             serve_file("iselein.png", fd, "HTTP/1.1 200 OK", "Content-type: image/png");
         } else if ((strcmp(*(req_vals + 1), "/profile.png")) == 0) {
             serve_file("profile.png", fd, "HTTP/1.1 200 OK", "Content-type: image/png");
+        } else if ((strcmp(*(req_vals + 1), "/resume.pdf")) == 0) {
+            serve_file("resume.pdf", fd, "HTTP/1.1 200 OK", "Content-type: application/pdf");
         } else {
             serve_file("404.html", fd, "HTTP/1.1 404 NOT FOUND", "Content-type: text/html");
         }
