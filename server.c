@@ -77,6 +77,12 @@ int send_response(int fd, char *header, char *content_type, void *body, int cont
     return rv;
 }
 
+int send_json(int fd, char * content_type, char* json) {
+    int rv = send_response(fd, content_type, "Content-type: application/json",
+            json, strnlen(json, MAX_RESPONSE_SIZE));
+    return rv;
+}
+
 /*
  * assume that the first line of the request is of the form:
  * REQ_TYPE /ROUTE HTTP/X
@@ -122,16 +128,28 @@ int serve_file(char *filename, int fd, char *header, char *content_type) {
 
     if (stat(filename, &buffer) == -1) {
         perror("stat");
+        char json[MAX_RESPONSE_SIZE];
+        snprintf(json, sizeof(json), "\"error\": \"error getting file - %s (stat error)\"", filename);
+        int rv = send_json(fd, "Content-type: application/json", json);
+        return rv;
     }
 
     if (!(buffer.st_mode & S_IFREG)) {
         fprintf(stderr, "not a regular file");
+        char json[MAX_RESPONSE_SIZE];
+        snprintf(json, sizeof(json), "\"error\": \"error getting file - %s (not a regular file)\"", filename);
+        int rv = send_json(fd, "Content-type: application/json", json);
+        return rv;
     }
 
     FILE *fp;
     fp = fopen(filename, "rb");
     if (fp == NULL) {
         perror("fopen");
+        char json[MAX_RESPONSE_SIZE];
+        snprintf(json, sizeof(json), "\"error\": \"error getting file - %s (fopen error)\"", filename);
+        int rv = send_json(fd, "Content-type: application/json", json);
+        return rv;
     }
 
     bytes_remaining = buffer.st_size;
@@ -139,12 +157,20 @@ int serve_file(char *filename, int fd, char *header, char *content_type) {
 
     if (buf == NULL) {
         perror("malloc");
+        char json[MAX_RESPONSE_SIZE];
+        snprintf(json, sizeof(json), "\"error\": \"error getting file - %s (malloc error)\"", filename);
+        int rv = send_json(fd, "Content-type: application/json", json);
+        return rv;
     }
 
     while (bytes_read = fread(p, 1, bytes_remaining, fp), bytes_read != 0 && bytes_remaining > 0) {
         if (bytes_read == -1) {
             free(buf);
             perror("fread");
+            char json[MAX_RESPONSE_SIZE];
+            snprintf(json, sizeof(json), "\"error\": \"error getting file - %s (read error)\"", filename);
+            int rv = send_json(fd, "Content-type: application/json", json);
+            return rv;
         }
 
         bytes_remaining -= bytes_read;
