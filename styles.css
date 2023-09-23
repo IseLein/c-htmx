@@ -153,6 +153,15 @@ img {
     font-size: 1em;
 }
 
+.project-head {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: start;
+    font-size: 1.1em;
+    padding-bottom: 10px;
+}
+
 @media only screen and (min-width: 600px) {
     body {
         padding-left: 100px;
@@ -208,6 +217,10 @@ img {
     .topic-body {
         font-size: 1.1em;
     }
+    .project-body {
+        margin-left: 30px;
+    }
+
 }
 
 @media only screen and (min-width: 992px) {
