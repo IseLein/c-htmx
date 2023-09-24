@@ -77,8 +77,8 @@ int send_response(int fd, char *header, char *content_type, void *body, int cont
     return rv;
 }
 
-int send_json(int fd, char * content_type, char* json) {
-    int rv = send_response(fd, content_type, "Content-type: application/json",
+int send_json(int fd, char * header, char* json) {
+    int rv = send_response(fd, header, "Content-type: application/json",
             json, strnlen(json, MAX_RESPONSE_SIZE));
     return rv;
 }
@@ -129,16 +129,16 @@ int serve_file(char *filename, int fd, char *header, char *content_type) {
     if (stat(filename, &buffer) == -1) {
         perror("stat");
         char json[MAX_RESPONSE_SIZE];
-        snprintf(json, sizeof(json), "\"error\": \"error getting file - %s (stat error)\"", filename);
-        int rv = send_json(fd, "Content-type: application/json", json);
+        snprintf(json, sizeof(json), "{\"error\": \"error getting file - %s (stat error)\"}", filename);
+        int rv = send_json(fd, "HTTP/1.1 500 Internal Server Error", json);
         return rv;
     }
 
     if (!(buffer.st_mode & S_IFREG)) {
         fprintf(stderr, "not a regular file");
         char json[MAX_RESPONSE_SIZE];
-        snprintf(json, sizeof(json), "\"error\": \"error getting file - %s (not a regular file)\"", filename);
-        int rv = send_json(fd, "Content-type: application/json", json);
+        snprintf(json, sizeof(json), "{\"error\": \"error getting file - %s (not a regular file)\"}", filename);
+        int rv = send_json(fd, "HTTP/1.1 500 Internal Server Error", json);
         return rv;
     }
 
@@ -147,8 +147,8 @@ int serve_file(char *filename, int fd, char *header, char *content_type) {
     if (fp == NULL) {
         perror("fopen");
         char json[MAX_RESPONSE_SIZE];
-        snprintf(json, sizeof(json), "\"error\": \"error getting file - %s (fopen error)\"", filename);
-        int rv = send_json(fd, "Content-type: application/json", json);
+        snprintf(json, sizeof(json), "{\"error\": \"error getting file - %s (fopen error)\"}", filename);
+        int rv = send_json(fd, "HTTP/1.1 500 Internal Server Error", json);
         return rv;
     }
 
@@ -158,8 +158,8 @@ int serve_file(char *filename, int fd, char *header, char *content_type) {
     if (buf == NULL) {
         perror("malloc");
         char json[MAX_RESPONSE_SIZE];
-        snprintf(json, sizeof(json), "\"error\": \"error getting file - %s (malloc error)\"", filename);
-        int rv = send_json(fd, "Content-type: application/json", json);
+        snprintf(json, sizeof(json), "{\"error\": \"error getting file - %s (malloc error)\"}", filename);
+        int rv = send_json(fd, "HTTP/1.1 500 Internal Server Error", json);
         return rv;
     }
 
@@ -168,8 +168,8 @@ int serve_file(char *filename, int fd, char *header, char *content_type) {
             free(buf);
             perror("fread");
             char json[MAX_RESPONSE_SIZE];
-            snprintf(json, sizeof(json), "\"error\": \"error getting file - %s (read error)\"", filename);
-            int rv = send_json(fd, "Content-type: application/json", json);
+            snprintf(json, sizeof(json), "{\"error\": \"error getting file - %s (read error)\"}", filename);
+            int rv = send_json(fd, "HTTP/1.1 500 Internal Server Error", json);
             return rv;
         }
 
@@ -207,6 +207,10 @@ void handle_http_request(int fd) {
             serve_file("iselein.png", fd, "HTTP/1.1 200 OK", "Content-type: image/png");
         } else if ((strcmp(*(req_vals + 1), "/profile.png")) == 0) {
             serve_file("profile.png", fd, "HTTP/1.1 200 OK", "Content-type: image/png");
+        } else if ((strcmp(*(req_vals + 1), "/inventory.png")) == 0) {
+            serve_file("inventory.png", fd, "HTTP/1.1 200 OK", "Content-type: image/png");
+        } else if ((strcmp(*(req_vals + 1), "/shb.png")) == 0) {
+            serve_file("shb.png", fd, "HTTP/1.1 200 OK", "Content-type: image/png");
         } else if ((strcmp(*(req_vals + 1), "/resume.pdf")) == 0) {
             serve_file("resume.pdf", fd, "HTTP/1.1 200 OK", "Content-type: application/pdf");
         } else {
